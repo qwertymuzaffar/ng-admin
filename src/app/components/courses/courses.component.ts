@@ -1,17 +1,20 @@
 import {Component, OnInit} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CoursesService } from 'src/app/services/courses.service';
 import { Observable, catchError, throwError } from 'rxjs';
 import { PageResponse } from 'src/app/model/page.response.model';
 import { Course } from '../../model/course.model';
 import { InstructorsService } from 'src/app/services/instructors.service';
 import { Instructor } from 'src/app/model/instructor.model';
+import { NgIf, NgFor, NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-courses',
-  templateUrl: './courses.component.html',
-  styleUrls: ['./courses.component.css']
+    selector: 'app-courses',
+    templateUrl: './courses.component.html',
+    styleUrls: ['./courses.component.scss'],
+    standalone: true,
+    imports: [NgIf, ReactiveFormsModule, NgFor, NgClass, AsyncPipe]
 })
 
 export class CoursesComponent implements OnInit {
@@ -28,7 +31,7 @@ export class CoursesComponent implements OnInit {
   submitted: boolean = false;
   defaultInstructor!: Instructor;
 
-  constructor(private modalService: NgbModal, 
+  constructor(private modalService: NgbModal,
     private fb: FormBuilder, private courseService: CoursesService,
     private instructorService: InstructorsService) {
   }
@@ -51,11 +54,11 @@ export class CoursesComponent implements OnInit {
     this.submitted = false;
     this.fetchInstructors();
     this.modalService.open(content, {size: 'xl'})
-  
+
   }
 
   handleSearchCourses() {
-  
+
     let keyword = this.searchFormGroup.value.keyword;
     this.pageCourses$ = this.courseService.searchCourses(keyword, this.currentPage, this.pageSize).pipe(
       catchError(err => {
@@ -63,7 +66,7 @@ export class CoursesComponent implements OnInit {
         return throwError(err);
       })
     )
-    
+
   }
 
   gotoPage(page: number) {
@@ -73,7 +76,7 @@ export class CoursesComponent implements OnInit {
 
   handleDeleteCourse(c: Course) {
     let conf = confirm("Are you sure?")
-    if (!conf) return;  
+    if (!conf) return;
     this.courseService.deleteCourse(c.courseId).subscribe({
       next: () => {
         this.handleSearchCourses();
@@ -82,7 +85,7 @@ export class CoursesComponent implements OnInit {
         alert(err.message)
         console.log(err);
       }
-    })  
+    })
   }
 
   fetchInstructors() {

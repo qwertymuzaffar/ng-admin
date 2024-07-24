@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { variationPlacements } from '@popperjs/core';
 import { Subscription } from 'rxjs';
 import { Instructor } from 'src/app/model/instructor.model';
 import { LoggedUser } from 'src/app/model/logged-user.model';
@@ -9,12 +8,16 @@ import { Student } from 'src/app/model/student.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { InstructorsService } from 'src/app/services/instructors.service';
 import { StudentsService } from 'src/app/services/students.service';
+import { RouterLink } from '@angular/router';
+import { NgIf, NgClass } from '@angular/common';
 
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    standalone: true,
+    imports: [NgIf, RouterLink, ReactiveFormsModule, NgClass]
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
@@ -27,7 +30,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentStudent!: Student | undefined;
   updateInstructorFormGroup!: FormGroup;
   updateStudentFormGroup!: FormGroup;
-  
+
   submitted: boolean = false;
 
   constructor(private authService: AuthService, private fb: FormBuilder, private modalService: NgbModal,

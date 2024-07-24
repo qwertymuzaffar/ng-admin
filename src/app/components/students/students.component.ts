@@ -1,17 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
 import { catchError, Observable, throwError } from "rxjs";
 import { PageResponse } from "../../model/page.response.model";
 import { Student } from "../../model/student.model";
 import { StudentsService } from "../../services/students.service";
 import { UsersService } from "../../services/users.service";
+import { NgIf, NgFor, NgClass, AsyncPipe } from '@angular/common';
 // import {EmailExistsValidator} from "../../validators/emailexists.validator";
 
 @Component({
-  selector: 'app-students',
-  templateUrl: './students.component.html',
-  styleUrls: ['./students.component.css']
+    selector: 'app-students',
+    templateUrl: './students.component.html',
+    styleUrls: ['./students.component.scss'],
+    standalone: true,
+    imports: [NgIf, ReactiveFormsModule, NgFor, NgClass, AsyncPipe]
 })
 
 
@@ -28,7 +31,7 @@ export class StudentsComponent implements OnInit {
 
 
   // constructor() { }
-  constructor(private modalService: NgbModal, private studentService: StudentsService, private fb: FormBuilder, private userService: UsersService) {
+  constructor(private modalService: NgbModal, private studentService: StudentsService, private fb: FormBuilder) {
   }
 
   ngOnInit(): void {
@@ -72,7 +75,7 @@ export class StudentsComponent implements OnInit {
     let conf = confirm("Are you sure?");
     if (!conf) return;
     this.studentService.deleteStudent(student.studentId).subscribe({
-      next: (resp) => {
+      next: () => {
         this.handleSearchStudents()
       },
       error: err => {

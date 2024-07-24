@@ -4,13 +4,14 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { Course } from 'src/app/model/course.model';
 import { PageResponse } from 'src/app/model/page.response.model';
 import { CoursesService } from 'src/app/services/courses.service';
+import { NgIf, NgFor, NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-courses-student',
-  // standalone: true,
-  // imports: [],
-  templateUrl: './courses-student.component.html',
-  styleUrls: ['./courses-student.component.css']
+    selector: 'app-courses-student',
+    templateUrl: './courses-student.component.html',
+    styleUrls: ['./courses-student.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgFor, NgClass, AsyncPipe]
 })
 export class CoursesStudentComponent implements OnInit {
 
@@ -54,7 +55,7 @@ export class CoursesStudentComponent implements OnInit {
     this.otherCoursesCurrentPage = page;
     this.handleSearchNonEnrolledInCourses();
   }
-  
+
 
   handleSearchNonEnrolledInCourses() {
     this.pageOtherCourses = this.courseService.getNonEnrolledInCoursesByStudent(this.studentId, this.otherCoursesCurrentPage, this.otherCoursesPageSize).pipe(

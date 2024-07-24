@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Course } from '../../model/course.model';
@@ -7,11 +7,14 @@ import { Instructor } from '../../model/instructor.model';
 import { PageResponse } from '../../model/page.response.model';
 import { CoursesService } from '../../services/courses.service';
 import { InstructorsService } from '../../services/instructors.service';
+import { NgIf, NgFor, NgClass, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-teachers',
-  templateUrl: './teachers.component.html',
-  styleUrls: ['./teachers.component.css']
+    selector: 'app-teachers',
+    templateUrl: './teachers.component.html',
+    styleUrls: ['./teachers.component.scss'],
+    standalone: true,
+    imports: [NgIf, ReactiveFormsModule, NgFor, NgClass, AsyncPipe]
 })
 
 
@@ -88,7 +91,7 @@ export class TeachersComponent implements OnInit {
   }
 
   onCloseModal(modal: any) {
-
+    console.log(modal)
   }
 
   onSaveInstructor(modal: any) {

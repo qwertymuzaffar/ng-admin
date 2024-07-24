@@ -1,6 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { NgIf, NgFor, NgClass, AsyncPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, catchError, throwError } from 'rxjs';
@@ -10,11 +10,11 @@ import { PageResponse } from 'src/app/model/page.response.model';
 import { CoursesService } from 'src/app/services/courses.service';
 
 @Component({
-  selector: 'app-courses-instructor',
-  // standalone: true,
-  // imports: [CommonModule],
-  templateUrl: './courses-instructor.component.html',
-  styleUrls: ['./courses-instructor.component.css']
+    selector: 'app-courses-instructor',
+    templateUrl: './courses-instructor.component.html',
+    styleUrls: ['./courses-instructor.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgFor, NgClass, ReactiveFormsModule, AsyncPipe]
 })
 export class CoursesInstructorComponent implements OnInit {
 

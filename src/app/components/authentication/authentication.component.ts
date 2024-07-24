@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
+import { NgClass, NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-authentication',
-  // standalone: true,
-  // imports: [],
-  templateUrl: './authentication.component.html',
-  styleUrls: ['./authentication.component.css']
+    selector: 'app-authentication',
+    templateUrl: './authentication.component.html',
+    styleUrls: ['./authentication.component.scss'],
+    standalone: true,
+    imports: [ReactiveFormsModule, NgClass, NgIf]
 })
 export class AuthenticationComponent implements OnInit {
 
 
   loginFormGroup!: FormGroup;
   submitted: boolean = false;
-  errorMessage!: string; 
+  errorMessage!: string;
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
 
