@@ -15,9 +15,7 @@ import { Student } from '../model/student.model';
 @Injectable({
   providedIn: 'root',
 })
-
 export class AuthService {
-
   #http: HttpClient = inject(HttpClient);
   #router: Router = inject(Router);
   #instructorService: InstructorsService = inject(InstructorsService);
@@ -28,47 +26,76 @@ export class AuthService {
   tokenExpirationTimer: any;
 
   public login(user: LoginRequest): Observable<LoginResponse> {
-    const formData = new FormData;
+    const formData = new FormData();
     formData.append('username', user.username);
     formData.append('password', user.password);
-    return this.#http.post<LoginResponse>(environment.backendHost + '/login', formData);
+    return this.#http.post<LoginResponse>(
+      environment.backendHost + '/login',
+      formData
+    );
   }
 
   saveToken(jwtTokens: LoginResponse) {
-    const decodedAccessToken = this.jwtHelperService.decodeToken(jwtTokens.accessToken);
-    const loggedUser = new LoggedUser(decodedAccessToken.sub, decodedAccessToken.roles,
-      jwtTokens.accessToken, this.getExpirationDate(decodedAccessToken.exp), undefined, undefined);
+    const decodedAccessToken = this.jwtHelperService.decodeToken(
+      jwtTokens.accessToken
+    );
+    const loggedUser = new LoggedUser(
+      decodedAccessToken.sub,
+      decodedAccessToken.roles,
+      jwtTokens.accessToken,
+      this.getExpirationDate(decodedAccessToken.exp),
+      undefined,
+      undefined
+    );
     this.user.next(loggedUser);
-    this.autoLogout(this.getExpirationDate(decodedAccessToken.exp).valueOf() - new Date().valueOf());
+    this.autoLogout(
+      this.getExpirationDate(decodedAccessToken.exp).valueOf() -
+        new Date().valueOf()
+    );
     localStorage.setItem('userData', JSON.stringify(loggedUser));
     this.redirectLoggedInUser(decodedAccessToken, jwtTokens.accessToken);
   }
 
-
   redirectLoggedInUser(decodedToken: any, accessToken: string) {
-    if (decodedToken.roles.includes('Admin')) this.#router.navigateByUrl('/courses');
+    if (decodedToken.roles.includes('Admin'))
+      this.#router.navigateByUrl('/courses');
     else if (decodedToken.roles.includes('Instructor')) {
-      this.#instructorService.loadInstructorByEmail(decodedToken.sub)
+      this.#instructorService
+        .loadInstructorByEmail(decodedToken.sub)
         .pipe(take(1))
         .subscribe(instructor => {
-          const loggedUser = new LoggedUser(decodedToken.sub, decodedToken.roles,
-            accessToken, this.getExpirationDate(decodedToken.exp), undefined, instructor);
+          const loggedUser = new LoggedUser(
+            decodedToken.sub,
+            decodedToken.roles,
+            accessToken,
+            this.getExpirationDate(decodedToken.exp),
+            undefined,
+            instructor
+          );
           this.user.next(loggedUser);
           localStorage.setItem('userData', JSON.stringify(loggedUser));
-          this.#router.navigateByUrl('/instructor-courses/' + instructor.instructorId);
+          this.#router.navigateByUrl(
+            '/instructor-courses/' + instructor.instructorId
+          );
         });
     } else if (decodedToken.roles.includes('Student')) {
-      this.#studentService.loadStudentByEmail(decodedToken.sub)
+      this.#studentService
+        .loadStudentByEmail(decodedToken.sub)
         .pipe(take(1))
         .subscribe(student => {
-          const loggedUser = new LoggedUser(decodedToken.sub, decodedToken.roles,
-            accessToken, this.getExpirationDate(decodedToken.exp), student, undefined);
+          const loggedUser = new LoggedUser(
+            decodedToken.sub,
+            decodedToken.roles,
+            accessToken,
+            this.getExpirationDate(decodedToken.exp),
+            student,
+            undefined
+          );
           this.user.next(loggedUser);
           localStorage.setItem('userData', JSON.stringify(loggedUser));
           this.#router.navigateByUrl('/student-courses/' + student.studentId);
         });
     }
-
   }
 
   autoLogin() {
@@ -76,15 +103,22 @@ export class AuthService {
     dataS = localStorage.getItem('userData');
     if (dataS == null) return;
     const userData: {
-      username: string,
-      roles: string[],
-      _token: string,
-      _expiration: string,
-      student: Student | undefined,
-      instructor: Instructor | undefined
+      username: string;
+      roles: string[];
+      _token: string;
+      _expiration: string;
+      student: Student | undefined;
+      instructor: Instructor | undefined;
     } = JSON.parse(dataS);
 
-    const loadedUser = new LoggedUser(userData.username, userData.roles, userData._token, new Date(userData._expiration), userData.student, userData.instructor);
+    const loadedUser = new LoggedUser(
+      userData.username,
+      userData.roles,
+      userData._token,
+      new Date(userData._expiration),
+      userData.student,
+      userData.instructor
+    );
     if (loadedUser.token) {
       this.user.next(loadedUser);
       this.autoLogout(loadedUser._expiration.valueOf() - new Date().valueOf());
@@ -103,30 +137,44 @@ export class AuthService {
 
   refreshInstructor(instructor: Instructor) {
     const userData: {
-      username: string,
-      roles: string[],
-      _token: string,
-      _expiration: Date,
-      student: Student | undefined,
-      instructor: Instructor | undefined
+      username: string;
+      roles: string[];
+      _token: string;
+      _expiration: Date;
+      student: Student | undefined;
+      instructor: Instructor | undefined;
     } = JSON.parse(localStorage.getItem('userData')!);
     if (!userData) return;
-    const loggedUser = new LoggedUser(userData.username, userData.roles, userData._token, new Date(userData._expiration), userData.student, instructor);
+    const loggedUser = new LoggedUser(
+      userData.username,
+      userData.roles,
+      userData._token,
+      new Date(userData._expiration),
+      userData.student,
+      instructor
+    );
     this.user.next(loggedUser);
     localStorage.setItem('userData', JSON.stringify(loggedUser));
   }
 
   refreshStudent(student: Student) {
     const userData: {
-      username: string,
-      roles: string[],
-      _token: string,
-      _expiration: Date,
-      student: Student | undefined,
-      instructor: Instructor | undefined
+      username: string;
+      roles: string[];
+      _token: string;
+      _expiration: Date;
+      student: Student | undefined;
+      instructor: Instructor | undefined;
     } = JSON.parse(localStorage.getItem('userData')!);
     if (!userData) return;
-    const loggedUser = new LoggedUser(userData.username, userData.roles, userData._token, new Date(userData._expiration), student, userData.instructor);
+    const loggedUser = new LoggedUser(
+      userData.username,
+      userData.roles,
+      userData._token,
+      new Date(userData._expiration),
+      student,
+      userData.instructor
+    );
     if (loggedUser.token) {
       this.user.next(loggedUser);
       localStorage.setItem('userData', JSON.stringify(loggedUser));
@@ -144,5 +192,4 @@ export class AuthService {
       this.logout();
     }, _expirationDuration);
   }
-
 }

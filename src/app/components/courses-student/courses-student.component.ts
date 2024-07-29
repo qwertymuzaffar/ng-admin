@@ -15,7 +15,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   imports: [NgIf, NgFor, NgClass, AsyncPipe],
 })
 export class CoursesStudentComponent implements OnInit {
-
   #destroyRef: DestroyRef = inject(DestroyRef);
   #route: ActivatedRoute = inject(ActivatedRoute);
   #courseService: CoursesService = inject(CoursesService);
@@ -37,13 +36,14 @@ export class CoursesStudentComponent implements OnInit {
   }
 
   handleSearchStudentCourses() {
-    this.pageCourses = this.#courseService.getCoursesByStudent(this.studentId, this.currentPage, this.pageSize).pipe(
-      catchError(err => {
+    this.pageCourses = this.#courseService
+      .getCoursesByStudent(this.studentId, this.currentPage, this.pageSize)
+      .pipe(
+        catchError(err => {
           this.errorMessage = err.errorMessage;
           return throwError(err);
-        },
-      ),
-    );
+        })
+      );
   }
 
   gotoPage(page: number) {
@@ -56,10 +56,13 @@ export class CoursesStudentComponent implements OnInit {
     this.handleSearchNonEnrolledInCourses();
   }
 
-
   handleSearchNonEnrolledInCourses() {
     this.pageOtherCourses = this.#courseService
-      .getNonEnrolledInCoursesByStudent(this.studentId, this.otherCoursesCurrentPage, this.otherCoursesPageSize)
+      .getNonEnrolledInCoursesByStudent(
+        this.studentId,
+        this.otherCoursesCurrentPage,
+        this.otherCoursesPageSize
+      )
       .pipe(
         catchError(err => {
           this.otherCoursesErrorMessage = err.message;
@@ -70,17 +73,18 @@ export class CoursesStudentComponent implements OnInit {
   }
 
   enrollIn(c: Course) {
-    this.#courseService.enrollStudentInCourse(c.courseId, this.studentId)
+    this.#courseService
+      .enrollStudentInCourse(c.courseId, this.studentId)
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: () => {
           this.handleSearchStudentCourses();
           this.handleSearchNonEnrolledInCourses();
-        }, error: err => {
+        },
+        error: err => {
           alert(err.message);
           console.log(err);
         },
       });
   }
-
 }

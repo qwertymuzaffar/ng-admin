@@ -1,9 +1,9 @@
-import { User } from "./user.model";
+import { User } from './user.model';
 
 export interface Instructor {
-    instructorId: number;
-    firstName: string;
-    lastName: string;
-    summary: string;
-    user: User;
+  instructorId: number;
+  firstName: string;
+  lastName: string;
+  summary: string;
+  user: User;
 }

@@ -1,6 +1,11 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { catchError, Observable, throwError } from 'rxjs';
 import { PageResponse } from '../../model/page.response.model';
 import { Student } from '../../model/student.model';
@@ -17,10 +22,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: true,
   imports: [NgIf, ReactiveFormsModule, NgFor, NgClass, AsyncPipe],
 })
-
-
 export class StudentsComponent implements OnInit {
-
   #destroyRef: DestroyRef = inject(DestroyRef);
   #fb: FormBuilder = inject(FormBuilder);
   #modalService: NgbModal = inject(NgbModal);
@@ -44,7 +46,13 @@ export class StudentsComponent implements OnInit {
       level: ['', Validators.required],
       user: this.#fb.group({
         // email: ["", [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")], [EmailExistsValidator.validate(this.userService)]],
-        email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+        email: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
+          ],
+        ],
         password: ['', Validators.required],
       }),
     });
@@ -52,15 +60,13 @@ export class StudentsComponent implements OnInit {
     this.handleSearchStudents();
   }
 
-
   getModal(content: any) {
     this.#modalService.open(content, { size: 'xl' });
     this.submitted = false;
   }
 
-
   handleSearchStudents() {
-    let keyword = this.searchFormGroup.value.keyword;
+    const keyword = this.searchFormGroup.value.keyword;
     this.pageStudents = this.#studentService
       .searchStudents(keyword, this.currentPage, this.pageSize)
       .pipe(
@@ -68,15 +74,15 @@ export class StudentsComponent implements OnInit {
           this.errorMessage = err.message;
           return throwError(err);
         }),
-        takeUntilDestroyed(this.#destroyRef),
+        takeUntilDestroyed(this.#destroyRef)
       );
-
   }
 
   handleDeleteStudent(student: Student) {
-    let conf = confirm('Are you sure?');
+    const conf = confirm('Are you sure?');
     if (!conf) return;
-    this.#studentService.deleteStudent(student.studentId)
+    this.#studentService
+      .deleteStudent(student.studentId)
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: () => {
@@ -92,13 +98,13 @@ export class StudentsComponent implements OnInit {
   gotoPage(page: number) {
     this.currentPage = page;
     this.handleSearchStudents();
-
   }
 
   onSaveStudent(modal: any) {
     this.submitted = true;
     if (this.studentFormGroup.invalid) return;
-    this.#studentService.saveStudent(this.studentFormGroup.value)
+    this.#studentService
+      .saveStudent(this.studentFormGroup.value)
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: () => {
@@ -107,11 +113,11 @@ export class StudentsComponent implements OnInit {
           this.studentFormGroup.reset();
           this.submitted = false;
           modal.close();
-        }, error: err => {
+        },
+        error: err => {
           alert(err.message);
         },
       });
-
   }
 
   onCloseModal(modal: any) {

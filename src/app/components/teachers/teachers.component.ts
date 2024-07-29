@@ -1,5 +1,10 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Course } from '../../model/course.model';
@@ -17,10 +22,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: true,
   imports: [NgIf, ReactiveFormsModule, NgFor, NgClass, AsyncPipe],
 })
-
-
 export class TeachersComponent implements OnInit {
-
   #destroyRef: DestroyRef = inject(DestroyRef);
   #fb: FormBuilder = inject(FormBuilder);
   #modalService: NgbModal = inject(NgbModal);
@@ -49,13 +51,18 @@ export class TeachersComponent implements OnInit {
       lastName: ['', Validators.required],
       summary: ['', Validators.required],
       user: this.#fb.group({
-        email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+        email: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
+          ],
+        ],
         password: ['', Validators.required],
       }),
     });
     this.handleSearchInstructors();
   }
-
 
   getModal(content: any) {
     this.submitted = false;
@@ -63,7 +70,7 @@ export class TeachersComponent implements OnInit {
   }
 
   handleSearchInstructors() {
-    let keyword = this.searchFormGroup.value.keyword;
+    const keyword = this.searchFormGroup.value.keyword;
     this.pageInstructors = this.#instructorService
       .searchInstructors(keyword, this.currentPage, this.pageSize)
       .pipe(
@@ -72,7 +79,7 @@ export class TeachersComponent implements OnInit {
           return throwError(err);
         }),
         takeUntilDestroyed(this.#destroyRef)
-    );
+      );
   }
 
   gotoPage(page: number) {
@@ -81,10 +88,11 @@ export class TeachersComponent implements OnInit {
   }
 
   handleDeleteInstructor(i: Instructor) {
-    let conf = confirm('Are you sure?');
+    const conf = confirm('Are you sure?');
     if (!conf) return;
 
-    this.#instructorService.deleteInstructor(i.instructorId)
+    this.#instructorService
+      .deleteInstructor(i.instructorId)
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: () => {
@@ -104,7 +112,8 @@ export class TeachersComponent implements OnInit {
   onSaveInstructor(modal: any) {
     this.submitted = true;
     if (this.instructorFormGroup.invalid) return;
-    this.#instructorService.saveInstructor(this.instructorFormGroup.value)
+    this.#instructorService
+      .saveInstructor(this.instructorFormGroup.value)
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: () => {
@@ -113,7 +122,8 @@ export class TeachersComponent implements OnInit {
           this.instructorFormGroup.reset();
           this.submitted = false;
           modal.close();
-        }, error: err => {
+        },
+        error: err => {
           alert(err.message);
           console.log(err);
         },
@@ -129,13 +139,17 @@ export class TeachersComponent implements OnInit {
 
   handleSearchCourses(i: Instructor) {
     this.pageCourses$ = this.#courseService
-      .getCoursesByInstructor(i.instructorId, this.coursesCurrentPage, this.coursespageSize)
+      .getCoursesByInstructor(
+        i.instructorId,
+        this.coursesCurrentPage,
+        this.coursespageSize
+      )
       .pipe(
         catchError(err => {
           this.coursesErrorMessage = err.message;
           return throwError(err);
         }),
-        takeUntilDestroyed(this.#destroyRef),
+        takeUntilDestroyed(this.#destroyRef)
       );
   }
 
@@ -144,4 +158,3 @@ export class TeachersComponent implements OnInit {
     this.handleSearchCourses(this.modalInstructor);
   }
 }
-

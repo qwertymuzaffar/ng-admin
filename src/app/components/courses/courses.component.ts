@@ -1,6 +1,11 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { CoursesService } from 'src/app/services/courses.service';
 import { Observable, catchError, throwError } from 'rxjs';
 import { PageResponse } from 'src/app/model/page.response.model';
@@ -17,9 +22,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: true,
   imports: [NgIf, ReactiveFormsModule, NgFor, NgClass, AsyncPipe],
 })
-
 export class CoursesComponent implements OnInit {
-
   #destroyRef: DestroyRef = inject(DestroyRef);
   #modalService: NgbModal = inject(NgbModal);
   #fb: FormBuilder = inject(FormBuilder);
@@ -51,18 +54,16 @@ export class CoursesComponent implements OnInit {
     this.handleSearchCourses();
   }
 
-
   getModal(content: any) {
     this.submitted = false;
     this.fetchInstructors();
     this.#modalService.open(content, { size: 'xl' });
-
   }
 
   handleSearchCourses() {
-
-    let keyword = this.searchFormGroup.value.keyword;
-    this.pageCourses$ = this.#courseService.searchCourses(keyword, this.currentPage, this.pageSize)
+    const keyword = this.searchFormGroup.value.keyword;
+    this.pageCourses$ = this.#courseService
+      .searchCourses(keyword, this.currentPage, this.pageSize)
       .pipe(
         catchError(err => {
           this.errorMessage = err.message;
@@ -70,7 +71,6 @@ export class CoursesComponent implements OnInit {
         }),
         takeUntilDestroyed(this.#destroyRef)
       );
-
   }
 
   gotoPage(page: number) {
@@ -79,9 +79,10 @@ export class CoursesComponent implements OnInit {
   }
 
   handleDeleteCourse(c: Course) {
-    let conf = confirm('Are you sure?');
+    const conf = confirm('Are you sure?');
     if (!conf) return;
-    this.#courseService.deleteCourse(c.courseId)
+    this.#courseService
+      .deleteCourse(c.courseId)
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: () => {
@@ -91,18 +92,16 @@ export class CoursesComponent implements OnInit {
           alert(err.message);
           console.log(err);
         },
-    });
+      });
   }
 
   fetchInstructors() {
-    this.instructors$ = this.#instructorService
-      .findAllInstructors()
-      .pipe(
-        catchError(err => {
-          this.errorInstructorMessage = err.message;
-          return throwError(err);
-        }),
-        takeUntilDestroyed(this.#destroyRef)
+    this.instructors$ = this.#instructorService.findAllInstructors().pipe(
+      catchError(err => {
+        this.errorInstructorMessage = err.message;
+        return throwError(err);
+      }),
+      takeUntilDestroyed(this.#destroyRef)
     );
   }
 
@@ -115,7 +114,8 @@ export class CoursesComponent implements OnInit {
     this.submitted = true;
     if (this.courseFormGroup.invalid) return;
     // console.log(this.courseFormGroup.value);
-    this.#courseService.saveCourse(this.courseFormGroup.value)
+    this.#courseService
+      .saveCourse(this.courseFormGroup.value)
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: () => {
@@ -124,10 +124,11 @@ export class CoursesComponent implements OnInit {
           this.courseFormGroup.reset();
           this.submitted = false;
           modal.close();
-        }, error: err => {
+        },
+        error: err => {
           alert(err.message);
         },
-    });
+      });
   }
 
   getUpdateModel(c: Course, updateContent: any) {
@@ -139,14 +140,19 @@ export class CoursesComponent implements OnInit {
       courseDescription: [c.courseDescription, Validators.required],
       instructor: [c.instructor, Validators.required],
     });
-    this.defaultInstructor = this.updateCourseFormGroup.controls['instructor'].value;
+    this.defaultInstructor =
+      this.updateCourseFormGroup.controls['instructor'].value;
     this.#modalService.open(updateContent, { size: 'xl' });
   }
 
   onUpdateCourse(updateModal: any) {
     this.submitted = true;
     if (this.updateCourseFormGroup.invalid) return;
-    this.#courseService.updateCourse(this.updateCourseFormGroup.value, this.updateCourseFormGroup.value.courseId)
+    this.#courseService
+      .updateCourse(
+        this.updateCourseFormGroup.value,
+        this.updateCourseFormGroup.value.courseId
+      )
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe({
         next: () => {
@@ -154,10 +160,10 @@ export class CoursesComponent implements OnInit {
           this.handleSearchCourses();
           this.submitted = false;
           updateModal.close();
-        }, error: err => {
+        },
+        error: err => {
           alert(err.message);
         },
-    });
+      });
   }
-
 }

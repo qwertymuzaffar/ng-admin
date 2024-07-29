@@ -13,7 +13,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   imports: [NgIf, RouterLink, RouterLinkActive],
 })
 export class NavbarComponent implements OnInit {
-
   #destroyRef: DestroyRef = inject(DestroyRef);
   #authService: AuthService = inject(AuthService);
 
@@ -32,17 +31,16 @@ export class NavbarComponent implements OnInit {
         this.isAuthenticated = !!data;
         if (!this.isAuthenticated) {
           this.initializeState();
-        } else if (!!data)
-          this.setRole(data);
+        } else if (data) this.setRole(data);
       });
   }
 
   setRole(loggedUser: LoggedUser | null) {
     if (loggedUser?.roles.includes('Admin')) this.isAdmin = true;
-    else if (!!loggedUser?.instructor) {
+    else if (loggedUser?.instructor) {
       this.isInstructor = true;
       this.instructorId = loggedUser.instructor?.instructorId;
-    } else if (!!loggedUser?.student) {
+    } else if (loggedUser?.student) {
       this.isStudent = true;
       this.studentId = loggedUser.student?.studentId;
     }
@@ -53,5 +51,4 @@ export class NavbarComponent implements OnInit {
     this.isInstructor = false;
     this.isStudent = false;
   }
-
 }

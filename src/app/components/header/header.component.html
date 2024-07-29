@@ -1,7 +1,9 @@
 <header class="shadow-sm">
   <div class="header" id="header">
     <div class="aside-header">
-      <div class="container-fluid"><span><i class="fa-brands fa-java"></i></span> &nbsp;Javacorner</div>
+      <div class="container-fluid">
+        <span><i class="fa-brands fa-java"></i></span> &nbsp;Javacorner
+      </div>
     </div>
     <div class="main-header">
       <div class="container-fluid">
@@ -10,22 +12,32 @@
             <span class="text-muted">Hello </span>
           </div>
 
-          <div class="top-menu ">
+          <div class="top-menu">
             <ul>
               <li *ngIf="isInstructor">
-                <a (click)="getModal(instructorContent)"><i class="fa-solid fa-circle-user"></i> {{name}}</a>
+                <a (click)="getModal(instructorContent)"
+                  ><i class="fa-solid fa-circle-user"></i> {{ name }}</a
+                >
               </li>
               <li *ngIf="isStudent">
-                <a (click)="getModal(studentContent)"><i class="fa-solid fa-circle-user"></i> {{name}}</a>
+                <a (click)="getModal(studentContent)"
+                  ><i class="fa-solid fa-circle-user"></i> {{ name }}</a
+                >
               </li>
-              <li *ngIf="isAuthenticated"><a (click)="logout()"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;
-                  Signout</a></li>
-              <li *ngIf="!isAuthenticated"><a routerLink="/auth"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;
-                  Login</a></li>
+              <li *ngIf="isAuthenticated">
+                <a (click)="logout()"
+                  ><i class="fa-solid fa-right-from-bracket"></i>&nbsp;
+                  Signout</a
+                >
+              </li>
+              <li *ngIf="!isAuthenticated">
+                <a routerLink="/auth"
+                  ><i class="fa-solid fa-right-from-bracket"></i>&nbsp; Login</a
+                >
+              </li>
             </ul>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -33,8 +45,14 @@
 
 <ng-template #instructorContent let-modal>
   <div class="modal-header">
-    <div class="modal-title text-muted"><i class="fa-regular fa-circle-dot"></i> Update Profile</div>
-    <button type="button" class="btn-close" aria-label="close" (click)="modal.dismiss('Cross click')"></button>
+    <div class="modal-title text-muted">
+      <i class="fa-regular fa-circle-dot"></i> Update Profile
+    </div>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="close"
+      (click)="modal.dismiss('Cross click')"></button>
   </div>
   <form [formGroup]="updateInstructorFormGroup">
     <div class="modal-body">
@@ -42,19 +60,39 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="text-muted">Instructor Id</label>
-            <input type="text" class="form-control form-font rounded-0 mt-1 mb-3" formControlName="instructorId"
-              readonly>
+            <input
+              type="text"
+              class="form-control form-font rounded-0 mt-1 mb-3"
+              formControlName="instructorId"
+              readonly />
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
             <label class="text-muted">First Name</label>
-            <input type="text" class="form-control form-font rounded-0 mt-1 mb-3"
-              [ngClass]="{'is-invalid': submitted && updateInstructorFormGroup.controls['firstName'].errors}"
-              formControlName="firstName">
-            <div *ngIf="submitted && updateInstructorFormGroup.controls['firstName'].errors" class="invalid-feedback">
-              <div *ngIf="updateInstructorFormGroup.controls['firstName'].errors['required']">First Name is Required
+            <input
+              type="text"
+              class="form-control form-font rounded-0 mt-1 mb-3"
+              [ngClass]="{
+                'is-invalid':
+                  submitted &&
+                  updateInstructorFormGroup.controls['firstName'].errors,
+              }"
+              formControlName="firstName" />
+            <div
+              *ngIf="
+                submitted &&
+                updateInstructorFormGroup.controls['firstName'].errors
+              "
+              class="invalid-feedback">
+              <div
+                *ngIf="
+                  updateInstructorFormGroup.controls['firstName'].errors[
+                    'required'
+                  ]
+                ">
+                First Name is Required
               </div>
             </div>
           </div>
@@ -63,11 +101,29 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="text-muted">Last Name</label>
-            <input type="text" class="form-control form-font rounded-0 mt-1 mb-3"
-              [ngClass]="{'is-invalid': submitted && updateInstructorFormGroup.controls['lastName'].errors}"
-              formControlName="lastName">
-            <div *ngIf="submitted && updateInstructorFormGroup.controls['lastName'].errors" class="invalid-feedback">
-              <div *ngIf="updateInstructorFormGroup.controls['lastName'].errors['required']">Last Name is Required</div>
+            <input
+              type="text"
+              class="form-control form-font rounded-0 mt-1 mb-3"
+              [ngClass]="{
+                'is-invalid':
+                  submitted &&
+                  updateInstructorFormGroup.controls['lastName'].errors,
+              }"
+              formControlName="lastName" />
+            <div
+              *ngIf="
+                submitted &&
+                updateInstructorFormGroup.controls['lastName'].errors
+              "
+              class="invalid-feedback">
+              <div
+                *ngIf="
+                  updateInstructorFormGroup.controls['lastName'].errors[
+                    'required'
+                  ]
+                ">
+                Last Name is Required
+              </div>
             </div>
           </div>
         </div>
@@ -75,26 +131,60 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="text-muted">Summary</label>
-            <input type="text" class="form-control form-font rounded-0 mt-1 mb-3"
-              [ngClass]="{'is-invalid': submitted && updateInstructorFormGroup.controls['summary'].errors}"
-              formControlName="summary">
-            <div *ngIf="submitted && updateInstructorFormGroup.controls['summary'].errors" class="invalid-feedback">
-              <div *ngIf="updateInstructorFormGroup.controls['summary'].errors['required']">Summary is Required</div>
+            <input
+              type="text"
+              class="form-control form-font rounded-0 mt-1 mb-3"
+              [ngClass]="{
+                'is-invalid':
+                  submitted &&
+                  updateInstructorFormGroup.controls['summary'].errors,
+              }"
+              formControlName="summary" />
+            <div
+              *ngIf="
+                submitted &&
+                updateInstructorFormGroup.controls['summary'].errors
+              "
+              class="invalid-feedback">
+              <div
+                *ngIf="
+                  updateInstructorFormGroup.controls['summary'].errors[
+                    'required'
+                  ]
+                ">
+                Summary is Required
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-sm btn-secondary" (click)="onCloseModal(modal)">Close</button>
-      <button type="button" class="btn btn-sm btn-primary" (click)="onUpdateInstructor(modal)">UpdateProfile</button>
+      <button
+        type="button"
+        class="btn btn-sm btn-secondary"
+        (click)="onCloseModal(modal)">
+        Close
+      </button>
+      <button
+        type="button"
+        class="btn btn-sm btn-primary"
+        (click)="onUpdateInstructor(modal)">
+        UpdateProfile
+      </button>
     </div>
   </form>
 </ng-template>
 <ng-template #studentContent let-modal>
   <div class="modal-header">
-    <div class="modal-title text-muted"><i class="fa-regular fa-circle-dot"></i> Update Profile</div>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    <div class="modal-title text-muted">
+      <i class="fa-regular fa-circle-dot"></i> Update Profile
+    </div>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"></button>
   </div>
   <form [formGroup]="updateStudentFormGroup">
     <div class="modal-body">
@@ -102,18 +192,39 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="text-muted">StudentId</label>
-            <input type="text" class="form-control form-font rounded-0 mt-1 mb-3" formControlName="studentId" readonly>
+            <input
+              type="text"
+              class="form-control form-font rounded-0 mt-1 mb-3"
+              formControlName="studentId"
+              readonly />
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
             <label class="text-muted">First Name</label>
-            <input type="text" class="form-control form-font rounded-0 mt-1 mb-3"
-              [ngClass]="{'is-invalid':submitted && updateStudentFormGroup.controls['firstName'].errors}"
-              formControlName="firstName">
-            <div *ngIf="submitted && updateStudentFormGroup.controls['firstName'].errors" class="invalid-feedback">
-              <div *ngIf="updateStudentFormGroup.controls['firstName'].errors['required']">First Name is Required</div>
+            <input
+              type="text"
+              class="form-control form-font rounded-0 mt-1 mb-3"
+              [ngClass]="{
+                'is-invalid':
+                  submitted &&
+                  updateStudentFormGroup.controls['firstName'].errors,
+              }"
+              formControlName="firstName" />
+            <div
+              *ngIf="
+                submitted && updateStudentFormGroup.controls['firstName'].errors
+              "
+              class="invalid-feedback">
+              <div
+                *ngIf="
+                  updateStudentFormGroup.controls['firstName'].errors[
+                    'required'
+                  ]
+                ">
+                First Name is Required
+              </div>
             </div>
           </div>
         </div>
@@ -121,11 +232,26 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="text-muted">Last Name</label>
-            <input type="text" class="form-control form-font rounded-0 mt-1 mb-3"
-              [ngClass]="{'is-invalid':submitted && updateStudentFormGroup.controls['lastName'].errors}"
-              formControlName="lastName">
-            <div *ngIf="submitted && updateStudentFormGroup.controls['lastName'].errors" class="invalid-feedback">
-              <div *ngIf="updateStudentFormGroup.controls['lastName'].errors['required']">Last Name is Required</div>
+            <input
+              type="text"
+              class="form-control form-font rounded-0 mt-1 mb-3"
+              [ngClass]="{
+                'is-invalid':
+                  submitted &&
+                  updateStudentFormGroup.controls['lastName'].errors,
+              }"
+              formControlName="lastName" />
+            <div
+              *ngIf="
+                submitted && updateStudentFormGroup.controls['lastName'].errors
+              "
+              class="invalid-feedback">
+              <div
+                *ngIf="
+                  updateStudentFormGroup.controls['lastName'].errors['required']
+                ">
+                Last Name is Required
+              </div>
             </div>
           </div>
         </div>
@@ -133,20 +259,43 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="text-muted">Level</label>
-            <input type="text" class="form-control form-font rounded-0 mt-1 mb-3"
-              [ngClass]="{'is-invalid':submitted && updateStudentFormGroup.controls['level'].errors}"
-              formControlName="level">
-            <div *ngIf="submitted && updateStudentFormGroup.controls['level'].errors" class="invalid-feedback">
-              <div *ngIf="updateStudentFormGroup.controls['level'].errors['required']">Level is Required</div>
+            <input
+              type="text"
+              class="form-control form-font rounded-0 mt-1 mb-3"
+              [ngClass]="{
+                'is-invalid':
+                  submitted && updateStudentFormGroup.controls['level'].errors,
+              }"
+              formControlName="level" />
+            <div
+              *ngIf="
+                submitted && updateStudentFormGroup.controls['level'].errors
+              "
+              class="invalid-feedback">
+              <div
+                *ngIf="
+                  updateStudentFormGroup.controls['level'].errors['required']
+                ">
+                Level is Required
+              </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-sm btn-secondary" (click)="onCloseModal(modal)">Close</button>
-      <button type="button" class="btn btn-sm btn-primary" (click)="onUpdateStudent(modal)">Update Profile</button>
+      <button
+        type="button"
+        class="btn btn-sm btn-secondary"
+        (click)="onCloseModal(modal)">
+        Close
+      </button>
+      <button
+        type="button"
+        class="btn btn-sm btn-primary"
+        (click)="onUpdateStudent(modal)">
+        Update Profile
+      </button>
     </div>
   </form>
 </ng-template>

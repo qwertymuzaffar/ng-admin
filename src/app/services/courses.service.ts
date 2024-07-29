@@ -9,12 +9,22 @@ import { Course } from '../model/course.model';
   providedIn: 'root',
 })
 export class CoursesService {
-
   #http: HttpClient = inject(HttpClient);
 
-  public searchCourses(keyword: string, currentPage: number, pageSize: number): Observable<PageResponse<Course>> {
-    return this.#http.get<PageResponse<Course>>(environment.backendHost + '/courses?keyword=' +
-      keyword + '&page=' + currentPage + '&size=' + pageSize);
+  public searchCourses(
+    keyword: string,
+    currentPage: number,
+    pageSize: number
+  ): Observable<PageResponse<Course>> {
+    return this.#http.get<PageResponse<Course>>(
+      environment.backendHost +
+        '/courses?keyword=' +
+        keyword +
+        '&page=' +
+        currentPage +
+        '&size=' +
+        pageSize
+    );
   }
 
   public deleteCourse(courseId: number) {
@@ -22,27 +32,75 @@ export class CoursesService {
   }
 
   public saveCourse(course: Course): Observable<Course> {
-    return this.#http.post<Course>(environment.backendHost + '/courses', course);
+    return this.#http.post<Course>(
+      environment.backendHost + '/courses',
+      course
+    );
   }
 
   public updateCourse(course: Course, courseId: number): Observable<Course> {
-    return this.#http.put<Course>(environment.backendHost + '/courses/' + courseId, course);
+    return this.#http.put<Course>(
+      environment.backendHost + '/courses/' + courseId,
+      course
+    );
   }
 
-  public getCoursesByInstructor(instructorId: number, currentPage: number, pageSize: number): Observable<PageResponse<Course>> {
-    return this.#http.get<PageResponse<Course>>(environment.backendHost + '/instructors/' +
-      instructorId + '/courses?page=' + currentPage + '&size=' + pageSize);
+  public getCoursesByInstructor(
+    instructorId: number,
+    currentPage: number,
+    pageSize: number
+  ): Observable<PageResponse<Course>> {
+    return this.#http.get<PageResponse<Course>>(
+      environment.backendHost +
+        '/instructors/' +
+        instructorId +
+        '/courses?page=' +
+        currentPage +
+        '&size=' +
+        pageSize
+    );
   }
 
-  public getCoursesByStudent(studentId: number, currentPage: number, pageSize: number): Observable<PageResponse<Course>> {
-    return this.#http.get<PageResponse<Course>>(environment.backendHost + '/students/' + studentId + '/courses?page=' + currentPage + '&size=' + pageSize);
+  public getCoursesByStudent(
+    studentId: number,
+    currentPage: number,
+    pageSize: number
+  ): Observable<PageResponse<Course>> {
+    return this.#http.get<PageResponse<Course>>(
+      environment.backendHost +
+        '/students/' +
+        studentId +
+        '/courses?page=' +
+        currentPage +
+        '&size=' +
+        pageSize
+    );
   }
 
-  public getNonEnrolledInCoursesByStudent(studentId: number, currentPage: number, pageSize: number) {
-    return this.#http.get<PageResponse<Course>>(environment.backendHost + '/students/' + studentId + '/other-courses?page=' + currentPage + '&size=' + pageSize);
+  public getNonEnrolledInCoursesByStudent(
+    studentId: number,
+    currentPage: number,
+    pageSize: number
+  ) {
+    return this.#http.get<PageResponse<Course>>(
+      environment.backendHost +
+        '/students/' +
+        studentId +
+        '/other-courses?page=' +
+        currentPage +
+        '&size=' +
+        pageSize
+    );
   }
 
   public enrollStudentInCourse(courseId: number, studentId: number) {
-    return this.#http.post(environment.backendHost + '/courses/' + courseId + '/enroll/students/' + studentId, null);
+    return this.#http.post(
+      environment.backendHost +
+        '/courses/' +
+        courseId +
+        '/enroll/students/' +
+        studentId,
+      null
+    );
   }
 }
