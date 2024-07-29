@@ -1,40 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
-@import "bootstrap-icons/font/bootstrap-icons.css";
+@import 'bootstrap-icons/font/bootstrap-icons.css';
 * {
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
 }
 
-
 body {
   font-size: 14px;
   /* background-color: #ECF0F2; */
-  background: linear-gradient(45deg,#F21A2B,#E787F2);
+  background: linear-gradient(45deg, #f21a2b, #e787f2);
 }
-
 
 .body-dark,
 .header-dark {
-  background-color: #42424A;
+  background-color: #42424a;
 }
 
 .header-dark .top-menu ul li a {
-  color: #Fff;
+  color: #fff;
 }
 
 .header-dark ul li a {
-  color: #FFF;
+  color: #fff;
 }
 
 header {
   position: fixed;
-  background-color: #FFF;
+  background-color: #fff;
   right: 0px;
   left: 0px;
   z-index: 900;
 }
-
 
 .wrapper,
 .header {
@@ -44,7 +41,7 @@ header {
 }
 
 .aside {
-  background: linear-gradient(195deg,#42424a,#191919);
+  background: linear-gradient(195deg, #42424a, #191919);
   height: 100vh;
   overflow: auto;
   padding-top: 60px;
@@ -60,16 +57,14 @@ header {
   text-align: right;
 }
 
-
 ul {
   margin-bottom: 0px;
-  padding-left: 0px;;
+  padding-left: 0px;
 }
-
 
 .aside-header {
   background-color: #42424a;
-  color:#FFF;
+  color: #fff;
   padding: 8px 0px;
   font-family: roboto;
 }
@@ -78,33 +73,28 @@ ul {
   font-size: 19px;
 }
 
-
-
 .aside nav ul li {
   list-style: none;
 }
 
-
-.aside nav ul li a{
+.aside nav ul li a {
   margin-bottom: 10px;
   padding: 10px 10px;
   border-radius: 4px;
-  color: #FFF;
+  color: #fff;
   display: block;
   text-decoration: none;
-  opacity: .6;
+  opacity: 0.6;
 }
 
-
 .aside nav ul li a.active,
-.aside nav ul li a.active:hover{
-  background: linear-gradient(195deg,#ec407a,#d81b60);
+.aside nav ul li a.active:hover {
+  background: linear-gradient(195deg, #ec407a, #d81b60);
   opacity: 1;
 }
 
-
-.aside nav ul li a:hover{
-  transition: .35 ease-in;
+.aside nav ul li a:hover {
+  transition: 0.35 ease-in;
   background: rgba(255, 255, 255, 0.253);
   opacity: 1;
 }
@@ -114,13 +104,11 @@ ul {
   display: inline-block;
 }
 
-
 .box {
   background-color: #fff;
   border-radius: 4px;
   margin-bottom: 20px;
 }
-
 
 .dataTables_length {
   padding-left: 10px;
@@ -132,16 +120,14 @@ ul {
   padding-top: 20px;
 }
 
-
 .dataTables_info {
   padding-left: 10px;
 }
 
-.pagination{
+.pagination {
   padding-right: 10px;
   padding-bottom: 10px;
 }
-
 
 .box-header {
   padding: 10px;
@@ -150,91 +136,75 @@ ul {
   font-size: 15px;
 }
 
-
 .paginate_button,
-.page-item  {
+.page-item {
   font-size: 13px;
 }
 
-
-
-.page-item .page-link{
+.page-item .page-link {
   font-size: 13px !important;
 }
 
-
 .box-header-grid {
   display: flex;
-  justify-content:flex-end;
+  justify-content: flex-end;
   align-items: center;
 }
 
 .box-header-title {
-  margin-right:auto;
+  margin-right: auto;
 }
 
 .btn-primary-gradient {
-  background: linear-gradient(195deg,#49a3f1,#1a73e8);
-  color:rgb(255, 255, 255);
+  background: linear-gradient(195deg, #49a3f1, #1a73e8);
+  color: rgb(255, 255, 255);
   border: none;
 }
-
 
 .btn-primary-gradient:hover {
-  background: linear-gradient(-195deg,#49a3f1,#1a73e8);
-  color:rgb(255, 255, 255);
+  background: linear-gradient(-195deg, #49a3f1, #1a73e8);
+  color: rgb(255, 255, 255);
 }
-
 
 .btn-success-gradient {
-  background: linear-gradient(195deg,#66bb6a,#43a047);
-  color:rgb(255, 255, 255);
+  background: linear-gradient(195deg, #66bb6a, #43a047);
+  color: rgb(255, 255, 255);
   border: none;
 }
-
 
 .btn-success-gradient:hover {
-  background: linear-gradient(-195deg,#66bb6a,#43a047);
-  color:rgb(255, 255, 255);
+  background: linear-gradient(-195deg, #66bb6a, #43a047);
+  color: rgb(255, 255, 255);
 }
-
-
 
 .btn-danger-gradient {
-  background: linear-gradient(195deg,#ec407a,#d81b60);
-  color:rgb(255, 255, 255);
+  background: linear-gradient(195deg, #ec407a, #d81b60);
+  color: rgb(255, 255, 255);
   border: none;
 }
-
 
 .btn-danger-gradient:hover {
-  background: linear-gradient(-195deg,#ec407a,#d81b60);
-  color:rgb(255, 255, 255);
+  background: linear-gradient(-195deg, #ec407a, #d81b60);
+  color: rgb(255, 255, 255);
 }
 
-
-
-
 .btn-dark-gradient {
-  background: linear-gradient(195deg,#42424a,#191919);
-  color:rgb(255, 255, 255);
+  background: linear-gradient(195deg, #42424a, #191919);
+  color: rgb(255, 255, 255);
   border: none;
 }
 
-
 .btn-dark-gradient:hover {
-  background: linear-gradient(-195deg,#42424a,#191919);
-  color:rgb(255, 255, 255);
+  background: linear-gradient(-195deg, #42424a, #191919);
+  color: rgb(255, 255, 255);
 }
-
 
 .box-footer {
   padding: 10px;
 }
 
-
 .dash {
-  background-color: #FFF;
+  background-color: #fff;
   border-radius: 4px;
 }
 
@@ -269,13 +239,11 @@ ul {
   font-weight: 600;
 }
 
-
 .main-header-menu {
   display: grid;
   grid-template-columns: 300px auto;
   align-items: center;
 }
-
 
 .top-menu {
   text-align: right;
@@ -290,7 +258,7 @@ ul {
 
 .top-menu ul li a {
   text-decoration: none;
-  color:inherit;
+  color: inherit;
 }
 
 .bread a {
@@ -307,7 +275,7 @@ ul {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   padding: 5px 10px;
   border-radius: 100px;
   user-select: none;
@@ -316,11 +284,10 @@ ul {
 }
 
 #uploadArea {
-  border: 2px dashed rgba(41, 128, 185,1.0);
+  border: 2px dashed rgba(41, 128, 185, 1);
   padding: 70px 0px;
   text-align: center;
-  background: rgba(41, 128, 185,0.05);
-
+  background: rgba(41, 128, 185, 0.05);
 }
 
 #fileLabel:hover {
@@ -333,29 +300,26 @@ ul {
   color: rgba(0, 0, 0, 0.5);
 }
 
-
 .table-blue {
-  background-color: #F1EAF2;
-  border-bottom: #F1EAF2;;
-  color: #FFF;
+  background-color: #f1eaf2;
+  border-bottom: #f1eaf2;
+  color: #fff;
 }
 
 .table-blue tr,
 .table-blue tr td {
-  background-color: #F1EAF2;
-  color: #FFF;
+  background-color: #f1eaf2;
+  color: #fff;
 }
-
 
 .table-blue thead tr,
 .table-blue tfoot tr {
-  background: #F1EAF2;
-  border-bottom: 0px solid #F1EAF2;
+  background: #f1eaf2;
+  border-bottom: 0px solid #f1eaf2;
   color: black;
 }
 
 @media only screen and (max-width: 768px) {
-
   .wrapper,
   .header {
     display: block;
@@ -363,10 +327,9 @@ ul {
     align-items: none;
   }
 
-  .aside{
-    display: none;;
+  .aside {
+    display: none;
   }
-
 
   .main-header-menu {
     display: block;
@@ -381,13 +344,10 @@ ul {
   }
 
   .bread {
-    display: none;;
+    display: none;
   }
-
 
   .main {
     padding-top: 100px;
   }
-
-
 }
