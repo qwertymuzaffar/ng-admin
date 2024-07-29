@@ -4,6 +4,10 @@ import { InstructorStudentGuardService } from "./services/instructor-student.gua
 
 export const routes: Routes = [
   {
+    path: 'auth',
+    loadComponent: () => import('./components/authentication/authentication.component').then(c => c.AuthenticationComponent)
+  },
+  {
     path: '',
     loadComponent: () => import('./components/authentication/authentication.component').then(c => c.AuthenticationComponent),
   },
@@ -37,16 +41,4 @@ export const routes: Routes = [
     canActivate: [AuthGuardService, InstructorStudentGuardService],
     data: { role: 'Student' }
   },
-  {
-    path: 'navbar',
-    loadComponent: () => import('./components/navbar/navbar.component').then(c => c.NavbarComponent),
-  },
-  {
-    path: 'header',
-    loadComponent: () => import('./components/header/header.component').then(c => c.HeaderComponent),
-  },
-  {
-    path: 'auth',
-    loadComponent: () => import('./components/authentication/authentication.component').then(c => c.AuthenticationComponent),
-  }
 ]

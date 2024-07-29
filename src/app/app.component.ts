@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -13,13 +13,10 @@ import { HeaderComponent } from './components/header/header.component';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private authService: AuthService) {
-
-  }
+  #authService: AuthService = inject(AuthService);
 
   ngOnInit(): void {
-    this.authService.autoLogin();
+    this.#authService.autoLogin();
   }
-
 
 }

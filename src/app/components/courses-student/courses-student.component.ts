@@ -1,19 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Course } from 'src/app/model/course.model';
 import { PageResponse } from 'src/app/model/page.response.model';
 import { CoursesService } from 'src/app/services/courses.service';
 import { NgIf, NgFor, NgClass, AsyncPipe } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-    selector: 'app-courses-student',
-    templateUrl: './courses-student.component.html',
-    styleUrls: ['./courses-student.component.scss'],
-    standalone: true,
-    imports: [NgIf, NgFor, NgClass, AsyncPipe]
+  selector: 'app-courses-student',
+  templateUrl: './courses-student.component.html',
+  styleUrls: ['./courses-student.component.scss'],
+  standalone: true,
+  imports: [NgIf, NgFor, NgClass, AsyncPipe],
 })
 export class CoursesStudentComponent implements OnInit {
+
+  #destroyRef: DestroyRef = inject(DestroyRef);
+  #route: ActivatedRoute = inject(ActivatedRoute);
+  #courseService: CoursesService = inject(CoursesService);
 
   studentId!: number;
   pageCourses!: Observable<PageResponse<Course>>;
@@ -25,25 +30,20 @@ export class CoursesStudentComponent implements OnInit {
   errorMessage!: string;
   otherCoursesErrorMessage!: string;
 
-  constructor(private route: ActivatedRoute, private courseService: CoursesService) {
-
-  }
-
   ngOnInit(): void {
-    this.studentId = this.route.snapshot.params['id'];
+    this.studentId = this.#route.snapshot.params['id'];
     this.handleSearchStudentCourses();
     this.handleSearchNonEnrolledInCourses();
   }
 
   handleSearchStudentCourses() {
-    this.pageCourses = this.courseService.getCoursesByStudent(this.studentId, this.currentPage, this.pageSize).pipe(
+    this.pageCourses = this.#courseService.getCoursesByStudent(this.studentId, this.currentPage, this.pageSize).pipe(
       catchError(err => {
-        this.errorMessage = err.errorMessage;
-        return throwError(err);
-      }
-
-      )
-    )
+          this.errorMessage = err.errorMessage;
+          return throwError(err);
+        },
+      ),
+    );
   }
 
   gotoPage(page: number) {
@@ -58,24 +58,29 @@ export class CoursesStudentComponent implements OnInit {
 
 
   handleSearchNonEnrolledInCourses() {
-    this.pageOtherCourses = this.courseService.getNonEnrolledInCoursesByStudent(this.studentId, this.otherCoursesCurrentPage, this.otherCoursesPageSize).pipe(
-      catchError(err => {
-        this.otherCoursesErrorMessage = err.message;
-        return throwError(err);
-      })
-    );
+    this.pageOtherCourses = this.#courseService
+      .getNonEnrolledInCoursesByStudent(this.studentId, this.otherCoursesCurrentPage, this.otherCoursesPageSize)
+      .pipe(
+        catchError(err => {
+          this.otherCoursesErrorMessage = err.message;
+          return throwError(err);
+        }),
+        takeUntilDestroyed(this.#destroyRef)
+      );
   }
 
   enrollIn(c: Course) {
-    this.courseService.enrollStudentInCourse(c.courseId, this.studentId).subscribe({
-      next: () => {
-        this.handleSearchStudentCourses();
-        this.handleSearchNonEnrolledInCourses();
-      }, error: err => {
-        alert(err.message);
-        console.log(err);
-      }
-    })
+    this.#courseService.enrollStudentInCourse(c.courseId, this.studentId)
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe({
+        next: () => {
+          this.handleSearchStudentCourses();
+          this.handleSearchNonEnrolledInCourses();
+        }, error: err => {
+          alert(err.message);
+          console.log(err);
+        },
+      });
   }
 
 }

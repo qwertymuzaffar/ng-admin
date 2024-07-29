@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, take } from 'rxjs';
 import { LoginRequest } from '../model/login.model';
-import { LoginResponse } from '../model/login.model'
+import { LoginResponse } from '../model/login.model';
 import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { LoggedUser } from '../model/logged-user.model';
@@ -13,24 +13,25 @@ import { Instructor } from '../model/instructor.model';
 import { Student } from '../model/student.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 
 export class AuthService {
+
+  #http: HttpClient = inject(HttpClient);
+  #router: Router = inject(Router);
+  #instructorService: InstructorsService = inject(InstructorsService);
+  #studentService: StudentsService = inject(StudentsService);
 
   jwtHelperService = new JwtHelperService();
   user = new BehaviorSubject<LoggedUser | null>(null);
   tokenExpirationTimer: any;
 
-  constructor(private http: HttpClient, private router: Router,
-    private instructorService: InstructorsService, private studentService: StudentsService) {
-  }
-
   public login(user: LoginRequest): Observable<LoginResponse> {
-    const formData = new FormData
+    const formData = new FormData;
     formData.append('username', user.username);
     formData.append('password', user.password);
-    return this.http.post<LoginResponse>(environment.backendHost + "/login", formData);
+    return this.#http.post<LoginResponse>(environment.backendHost + '/login', formData);
   }
 
   saveToken(jwtTokens: LoginResponse) {
@@ -45,24 +46,27 @@ export class AuthService {
 
 
   redirectLoggedInUser(decodedToken: any, accessToken: string) {
-    if (decodedToken.roles.includes("Admin")) this.router.navigateByUrl("/courses");
-    else if (decodedToken.roles.includes("Instructor")) {
-      this.instructorService.loadInstructorByEmail(decodedToken.sub).subscribe(instructor => {
-        const loggedUser = new LoggedUser(decodedToken.sub, decodedToken.roles,
-          accessToken, this.getExpirationDate(decodedToken.exp), undefined, instructor);
-        this.user.next(loggedUser);
-        localStorage.setItem('userData', JSON.stringify(loggedUser));
-        this.router.navigateByUrl("/instructor-courses/" + instructor.instructorId);
-      })
-    }
-    else if (decodedToken.roles.includes("Student")) {
-      this.studentService.loadStudentByEmail(decodedToken.sub).subscribe(student => {
-        const loggedUser = new LoggedUser(decodedToken.sub, decodedToken.roles,
-          accessToken, this.getExpirationDate(decodedToken.exp), student, undefined);
-        this.user.next(loggedUser);
-        localStorage.setItem('userData', JSON.stringify(loggedUser));
-        this.router.navigateByUrl("/student-courses/" + student.studentId);
-      })
+    if (decodedToken.roles.includes('Admin')) this.#router.navigateByUrl('/courses');
+    else if (decodedToken.roles.includes('Instructor')) {
+      this.#instructorService.loadInstructorByEmail(decodedToken.sub)
+        .pipe(take(1))
+        .subscribe(instructor => {
+          const loggedUser = new LoggedUser(decodedToken.sub, decodedToken.roles,
+            accessToken, this.getExpirationDate(decodedToken.exp), undefined, instructor);
+          this.user.next(loggedUser);
+          localStorage.setItem('userData', JSON.stringify(loggedUser));
+          this.#router.navigateByUrl('/instructor-courses/' + instructor.instructorId);
+        });
+    } else if (decodedToken.roles.includes('Student')) {
+      this.#studentService.loadStudentByEmail(decodedToken.sub)
+        .pipe(take(1))
+        .subscribe(student => {
+          const loggedUser = new LoggedUser(decodedToken.sub, decodedToken.roles,
+            accessToken, this.getExpirationDate(decodedToken.exp), student, undefined);
+          this.user.next(loggedUser);
+          localStorage.setItem('userData', JSON.stringify(loggedUser));
+          this.#router.navigateByUrl('/student-courses/' + student.studentId);
+        });
     }
 
   }
@@ -90,7 +94,7 @@ export class AuthService {
   logout() {
     localStorage.clear();
     this.user.next(null);
-    this.router.navigate(['/']);
+    this.#router.navigate(['/']);
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
     }
@@ -138,7 +142,7 @@ export class AuthService {
   autoLogout(_expirationDuration: number) {
     this.tokenExpirationTimer = setTimeout(() => {
       this.logout();
-    }, _expirationDuration)
+    }, _expirationDuration);
   }
 
 }
