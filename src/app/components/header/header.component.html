@@ -14,27 +14,41 @@
 
           <div class="top-menu">
             <ul>
-              <li *ngIf="isInstructor">
-                <a (click)="getModal(instructorContent)"
-                  ><i class="fa-solid fa-circle-user"></i> {{ name }}</a
-                >
-              </li>
-              <li *ngIf="isStudent">
-                <a (click)="getModal(studentContent)"
-                  ><i class="fa-solid fa-circle-user"></i> {{ name }}</a
-                >
-              </li>
-              <li *ngIf="isAuthenticated">
-                <a (click)="logout()"
+              @if (isAuthenticated()) {
+                <li *ngIf="isInstructor()">
+                  <a (click)="getModal(instructorContent)"
+                    ><i class="fa-solid fa-circle-user"></i>
+                    {{
+                      currentInstructor()?.firstName +
+                        ' ' +
+                        currentInstructor()?.lastName
+                    }}</a
+                  >
+                </li>
+                <li *ngIf="isStudent()">
+                  <a (click)="getModal(studentContent)"
+                    ><i class="fa-solid fa-circle-user"></i>
+                    {{
+                      currentStudent()?.firstName +
+                        ' ' +
+                        currentStudent()?.lastName
+                    }}</a
+                  >
+                </li>
+                <li>
+                  <a (click)="logout()"
                   ><i class="fa-solid fa-right-from-bracket"></i>&nbsp;
-                  Signout</a
-                >
-              </li>
-              <li *ngIf="!isAuthenticated">
-                <a routerLink="/auth"
-                  ><i class="fa-solid fa-right-from-bracket"></i>&nbsp; Login</a
-                >
-              </li>
+                    Signout</a
+                  >
+                </li>
+              } @else {
+                <li *ngIf="!isAuthenticated()">
+                  <a routerLink="/auth"
+                    ><i class="fa-solid fa-right-from-bracket"></i>&nbsp;
+                    Login</a
+                  >
+                </li>
+              }
             </ul>
           </div>
         </div>

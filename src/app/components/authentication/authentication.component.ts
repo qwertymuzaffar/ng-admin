@@ -1,13 +1,12 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { AuthService } from 'src/app/services/auth.service';
 import { NgClass, NgIf } from '@angular/common';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AuthStore } from './store';
 
 @Component({
   selector: 'app-authentication',
@@ -17,9 +16,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   imports: [ReactiveFormsModule, NgClass, NgIf],
 })
 export class AuthenticationComponent implements OnInit {
-  #destroyRef: DestroyRef = inject(DestroyRef);
+  #authStore: AuthStore = inject(AuthStore);
   #fb: FormBuilder = inject(FormBuilder);
-  #authService: AuthService = inject(AuthService);
 
   loginFormGroup!: FormGroup;
   submitted: boolean = false;
@@ -41,17 +39,6 @@ export class AuthenticationComponent implements OnInit {
   onLogin() {
     this.submitted = true;
     if (this.loginFormGroup.invalid) return;
-    this.#authService
-      .login(this.loginFormGroup.value)
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe({
-        next: loginResponse => {
-          this.#authService.saveToken(loginResponse);
-        },
-        error: err => {
-          console.log(err);
-          this.errorMessage = 'An error occurred';
-        },
-      });
+    this.#authStore.login(this.loginFormGroup.value);
   }
 }

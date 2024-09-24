@@ -7,6 +7,8 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
+import { provideComponentStore } from '@ngrx/component-store';
+import { AuthStore } from './components/authentication/store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +18,7 @@ export const appConfig: ApplicationConfig = {
       ReactiveFormsModule,
       CommonModule
     ),
+    provideComponentStore(AuthStore),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
   ],

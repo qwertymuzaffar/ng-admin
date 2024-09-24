@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -6,87 +6,61 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Instructor } from 'src/app/model/instructor.model';
-import { LoggedUser } from 'src/app/model/logged-user.model';
-import { Student } from 'src/app/model/student.model';
-import { AuthService } from 'src/app/services/auth.service';
 import { InstructorsService } from 'src/app/services/instructors.service';
 import { StudentsService } from 'src/app/services/students.service';
 import { RouterLink } from '@angular/router';
-import { NgIf, NgClass } from '@angular/common';
+import { NgIf, NgClass, AsyncPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AuthStore } from '../authentication/store';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   standalone: true,
-  imports: [NgIf, RouterLink, ReactiveFormsModule, NgClass],
+  imports: [NgIf, RouterLink, ReactiveFormsModule, NgClass, AsyncPipe],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   #destroyRef: DestroyRef = inject(DestroyRef);
   #fb: FormBuilder = inject(FormBuilder);
   #modalService: NgbModal = inject(NgbModal);
-  #authService: AuthService = inject(AuthService);
+  #authStore: AuthStore = inject(AuthStore);
   #instructorService: InstructorsService = inject(InstructorsService);
   #studentService: StudentsService = inject(StudentsService);
 
-  isAuthenticated = false;
-  isInstructor = false;
-  isStudent = false;
-  name!: string | undefined;
-  currentInstructor!: Instructor | undefined;
-  currentStudent!: Student | undefined;
+  isAuthenticated = this.#authStore.isAuthenticated;
+  isInstructor = this.#authStore.isInstructor;
+  currentInstructor = this.#authStore.instructor;
+  currentStudent = this.#authStore.student;
+  isStudent = this.#authStore.isStudent;
+
   updateInstructorFormGroup!: FormGroup;
   updateStudentFormGroup!: FormGroup;
 
   submitted: boolean = false;
 
-  ngOnInit(): void {
-    this.#authService.user
-      .pipe(takeUntilDestroyed(this.#destroyRef))
-      .subscribe(loggedUser => {
-        this.isAuthenticated = !!LoggedUser;
-        this.isInstructor = !!loggedUser?.instructor;
-        this.isStudent = !!loggedUser?.student;
-        if (this.isInstructor) {
-          this.name =
-            loggedUser?.instructor?.firstName +
-            ' ' +
-            loggedUser?.instructor?.lastName;
-          this.currentInstructor = loggedUser?.instructor;
-        } else if (this.isStudent) {
-          this.name =
-            loggedUser?.student?.firstName +
-            ' ' +
-            loggedUser?.student?.lastName;
-          this.currentStudent = loggedUser?.student;
-        }
-      });
-  }
-
   logout() {
-    this.#authService.logout();
+    this.#authStore.logout();
   }
 
-  getModal(content: any) {
+  getModal<T>(content: T) {
     this.#modalService.open(content, { size: 'xl' });
-    if (this.isInstructor) {
+    if (this.isInstructor()) {
       this.updateInstructorFormGroup = this.#fb.group({
         instructorId: [
-          this.currentInstructor?.instructorId,
+          this.currentInstructor()?.instructorId,
           Validators.required,
         ],
-        firstName: [this.currentInstructor?.firstName, Validators.required],
-        lastName: [this.currentInstructor?.lastName, Validators.required],
-        summary: [this.currentInstructor?.summary, Validators.required],
+        firstName: [this.currentInstructor()?.firstName, Validators.required],
+        lastName: [this.currentInstructor()?.lastName, Validators.required],
+        summary: [this.currentInstructor()?.summary, Validators.required],
       });
-    } else if (this.isStudent) {
+    } else if (this.isStudent()) {
       this.updateStudentFormGroup = this.#fb.group({
-        studentId: [this.currentStudent?.studentId, Validators.required],
-        firstName: [this.currentStudent?.firstName, Validators.required],
-        lastName: [this.currentStudent?.lastName, Validators.required],
-        level: [this.currentStudent?.level, Validators.required],
+        studentId: [this.currentStudent()?.studentId, Validators.required],
+        firstName: [this.currentStudent()?.firstName, Validators.required],
+        lastName: [this.currentStudent()?.lastName, Validators.required],
+        level: [this.currentStudent()?.level, Validators.required],
       });
     }
   }
@@ -107,7 +81,7 @@ export class HeaderComponent implements OnInit {
       .subscribe({
         next: instructor => {
           alert('Success Updating Profile');
-          this.#authService.refreshInstructor(instructor);
+          this.#authStore.refreshInstructor(instructor);
           this.submitted = false;
           modal.close();
         },
@@ -129,7 +103,7 @@ export class HeaderComponent implements OnInit {
       .subscribe({
         next: student => {
           alert('Success Updating Profile');
-          this.#authService.refreshStudent(student);
+          this.#authStore.refreshStudent(student);
           this.submitted = false;
           modal.close();
         },
