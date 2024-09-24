@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { AuthGuardService } from './services/auth.guard.service';
-import { InstructorStudentGuardService } from './services/instructor-student.guard.service';
+import { authGuard } from './guards/auth.guard';
+import { instructorStudentGuard } from './guards/instructor-student.guard';
 
 export const routes: Routes = [
   {
@@ -23,7 +23,7 @@ export const routes: Routes = [
       import('./components/courses/courses.component').then(
         c => c.CoursesComponent
       ),
-    canActivate: [AuthGuardService],
+    canActivate: [authGuard],
     data: { role: 'Admin' },
   },
   {
@@ -32,7 +32,7 @@ export const routes: Routes = [
       import('./components/students/students.component').then(
         c => c.StudentsComponent
       ),
-    canActivate: [AuthGuardService],
+    canActivate: [authGuard],
     data: { role: 'Admin' },
   },
   {
@@ -41,7 +41,7 @@ export const routes: Routes = [
       import('./components/teachers/teachers.component').then(
         c => c.TeachersComponent
       ),
-    canActivate: [AuthGuardService],
+    canActivate: [authGuard],
     data: { role: 'Admin' },
   },
   {
@@ -50,7 +50,7 @@ export const routes: Routes = [
       import(
         './components/courses-instructor/courses-instructor.component'
       ).then(c => c.CoursesInstructorComponent),
-    canActivate: [AuthGuardService, InstructorStudentGuardService],
+    canActivate: [authGuard, instructorStudentGuard],
     data: { role: 'Instructor' },
   },
   {
@@ -59,7 +59,7 @@ export const routes: Routes = [
       import('./components/courses-student/courses-student.component').then(
         c => c.CoursesStudentComponent
       ),
-    canActivate: [AuthGuardService, InstructorStudentGuardService],
+    canActivate: [authGuard, instructorStudentGuard],
     data: { role: 'Student' },
   },
 ];
