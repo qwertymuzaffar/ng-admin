@@ -1,65 +1,61 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './guards/auth.guard';
-import { instructorStudentGuard } from './guards/instructor-student.guard';
+import { authGuard } from '@core/guards/auth.guard';
+import { instructorStudentGuard } from '@core/guards/instructor-student.guard';
 
 export const routes: Routes = [
   {
     path: 'auth',
     loadComponent: () =>
-      import('./components/authentication/authentication.component').then(
-        c => c.AuthenticationComponent
-      ),
+      import('@app/auth/auth.component').then(c => c.AuthComponent),
   },
   {
     path: '',
+    canActivate: [authGuard],
     loadComponent: () =>
-      import('./components/authentication/authentication.component').then(
-        c => c.AuthenticationComponent
-      ),
+      import('@app/auth/auth.component').then(c => c.AuthComponent),
   },
   {
     path: 'courses',
     loadComponent: () =>
-      import('./components/courses/courses.component').then(
-        c => c.CoursesComponent
-      ),
+      import('@app/courses/courses.component').then(c => c.CoursesComponent),
     canActivate: [authGuard],
     data: { role: 'Admin' },
   },
   {
     path: 'students',
     loadComponent: () =>
-      import('./components/students/students.component').then(
-        c => c.StudentsComponent
-      ),
+      import('@app/students/students.component').then(c => c.StudentsComponent),
     canActivate: [authGuard],
     data: { role: 'Admin' },
   },
   {
     path: 'teachers',
     loadComponent: () =>
-      import('./components/teachers/teachers.component').then(
-        c => c.TeachersComponent
-      ),
+      import('@app/teachers/teachers.component').then(c => c.TeachersComponent),
     canActivate: [authGuard],
     data: { role: 'Admin' },
   },
   {
     path: 'instructor-courses/:id',
     loadComponent: () =>
-      import(
-        './components/courses-instructor/courses-instructor.component'
-      ).then(c => c.CoursesInstructorComponent),
+      import('@app/courses-instructor/courses-instructor.component').then(
+        c => c.CoursesInstructorComponent
+      ),
     canActivate: [authGuard, instructorStudentGuard],
     data: { role: 'Instructor' },
   },
   {
     path: 'student-courses/:id',
     loadComponent: () =>
-      import('./components/courses-student/courses-student.component').then(
+      import('@app/courses-student/courses-student.component').then(
         c => c.CoursesStudentComponent
       ),
     canActivate: [authGuard, instructorStudentGuard],
     data: { role: 'Student' },
+  },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('@app/auth/auth.component').then(c => c.AuthComponent),
   },
 ];

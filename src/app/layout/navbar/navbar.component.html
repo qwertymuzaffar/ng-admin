@@ -1,0 +1,38 @@
+<div class="aside">
+  <div class="container-fluid">
+    <nav>
+      <ul *ngIf="isAuthenticated$ | async">
+        <li *ngIf="isAdmin$ | async">
+          <a routerLink="/students" routerLinkActive="active"
+            ><span><i class="fa-solid fa-graduation-cap"></i></span> Students</a
+          >
+        </li>
+        <li *ngIf="isAdmin$ | async">
+          <a routerLink="/courses" routerLinkActive="active"
+            ><span><i class="fa-solid fa-receipt"></i></span> Courses</a
+          >
+        </li>
+        <li *ngIf="isAdmin$ | async">
+          <a routerLink="/teachers" routerLinkActive="active"
+            ><span><i class="fa-solid fa-user-graduate"></i></span> Teachers</a
+          >
+        </li>
+        <li *ngIf="isInstructor$ | async">
+          <a
+            [routerLink]="['/instructor-courses/', instructor()?.instructorId]"
+            routerLinkActive="active"
+            ><span><i class="fa-solid fa-person-chalkboard"></i></span> My
+            Courses</a
+          >
+        </li>
+        <li *ngIf="isStudent$ | async">
+          <a
+            [routerLink]="['/student-courses/', student()?.studentId]"
+            routerLinkActive="active"
+            ><span><i class="fa-solid fa-school"></i></span> My Courses</a
+          >
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
